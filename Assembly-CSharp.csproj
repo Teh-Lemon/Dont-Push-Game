@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{4DF30EEA-27EB-665F-3661-4A84D855B9C2}</ProjectGuid>
+	<ProjectGuid>{E9F77EE6-EB77-8325-0D67-BAC44EF782B4}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -47,7 +47,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\_Scripts\Block.cs" />
+     <Compile Include="Assets\_Scripts\BlockBoundary.cs" />
      <Compile Include="Assets\_Scripts\BlockController.cs" />
+     <Compile Include="Assets\_Scripts\BottomBoundary.cs" />
+     <Compile Include="Assets\_Scripts\GameController.cs" />
+     <Compile Include="Assets\_Scripts\GameState.cs" />
      <Compile Include="Assets\_Scripts\PlayerController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -17,6 +17,7 @@ public class Block : MonoBehaviour
         GameObject blockImage = new GameObject();
         blockImage.AddComponent<SpriteRenderer>();
         blockImage.GetComponent<SpriteRenderer>().sprite = newImage;
+        blockImage.transform.position = transform.position;
         blockImage.transform.parent = transform;
     }
 }
