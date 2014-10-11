@@ -13,6 +13,11 @@ public class BlockController : MonoBehaviour
     public Vector2 SpawnMinPosition;
     // How far the block can spawn from the min
     public float SpawnXRange;
+    // Range of random block sizes
+    public float MinBlockScale;
+    public float MaxBlockScale;
+    // Percentage range of speed
+    public float SpeedRange;
 
     // Game Controller reference
     GameController gameC;
@@ -39,8 +44,9 @@ public class BlockController : MonoBehaviour
             Debug.Log("Cannot find 'GameController' script");
         }
 
-        //StartCoroutine(SpawnBlockWaves());
-        SpawnBlock();
+        // Continually spawn blocks if game is running
+        StartCoroutine(SpawnBlockWaves());
+        //SpawnBlock();
     }
 
     // Continually spawn blocks while the game is PLAYING
@@ -53,7 +59,9 @@ public class BlockController : MonoBehaviour
         while (gameC.CurrentState == GameStates.States.PLAYING)
         {
             SpawnBlock();
+            SpawnBlock();
 
+            // Wait between each block spawn
             yield return new WaitForSeconds(SpawnInterval);
         }
     }
@@ -68,8 +76,14 @@ public class BlockController : MonoBehaviour
         // Spawn new Block
         GameObject newBlock = Instantiate(blockPrefab, spawnPoint, Quaternion.identity) as GameObject;
 
-        // Set a random image (ignore last image, used for bomb)
+        // Set a random image (ignore last image which is used for the bomb)
         int imageID = Random.Range(0, blockSprites.Length - 2);
         newBlock.GetComponent<Block>().SetImage(blockSprites[imageID]);
+
+        // Randomize scale of block
+        newBlock.GetComponent<Block>().RandomizeScale(MinBlockScale, MaxBlockScale);
+
+        // Randomize block speed
+        newBlock.GetComponent<Block>().RandomizeSpeed(SpeedRange);
     }
 }

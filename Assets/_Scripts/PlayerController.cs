@@ -7,11 +7,12 @@ public class PlayerController : MonoBehaviour
     public float Speed = 300f;
     // Spawn point on game start
     public Vector2 SpawnPoint = new Vector2(0, -2);
-    public float BottomBoundary;
+    public float BottomBoundary = 0;
 
+    // Is the player being pushed by a block
     bool IsBeingPushed = false;
-
-
+    // The y position of the player in the previous frame
+    float previousTransformY = 0;
 
     // Use this for initialization
     void Start()
@@ -19,9 +20,15 @@ public class PlayerController : MonoBehaviour
         rigidbody2D.position = SpawnPoint;
     }
 
-    void LateUpdate()
+    void Update()
     {
+        // Prevent player leaving stage area
+        if (!AllowedThroughBoundary)
+        {
+            transform.position = new Vector2(transform.position.x, BottomBoundary);
+        }
 
+        previousTransformY = transform.position.y;
     }
 
     void FixedUpdate()
@@ -43,9 +50,9 @@ public class PlayerController : MonoBehaviour
         rigidbody2D.velocity = movement * Speed * Time.deltaTime;
 
         // Prevent player leaving stage area
-        if (transform.position.y < BottomBoundary && !IsBeingPushed)
+        // Stops player leaning through boundary bug
+        if (!AllowedThroughBoundary)
         {
-            transform.position = new Vector2(rigidbody2D.position.x, BottomBoundary);
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
         }
     }
@@ -57,7 +64,6 @@ public class PlayerController : MonoBehaviour
             IsBeingPushed = true;
         }
     }
-
     void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.tag == "Block")
@@ -66,14 +72,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /*
-    void OnTriggerStay2D(Collider2D other)
-    {        
-        if (!IsBeingPushed)
+    // Prevent player leaving stage area
+    // Only if they're not being pushed down by a block
+    // Stop player bouncing back up if they stop touching a block
+    bool AllowedThroughBoundary
+    {
+        get
         {
-            Debug.Log("enter");
-            rigidbody2D.velocity -= new Vector2(0, rigidbody2D.velocity.y * 1000);
+            if (rigidbody2D.position.y < BottomBoundary
+                && !IsBeingPushed
+                && previousTransformY >= BottomBoundary)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
-     * */
 }
