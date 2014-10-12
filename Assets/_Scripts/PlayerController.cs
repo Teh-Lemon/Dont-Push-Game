@@ -7,7 +7,12 @@ public class PlayerController : MonoBehaviour
     public float Speed = 300f;
     // Spawn point on game start
     public Vector2 SpawnPoint = new Vector2(0, -2);
+    // Y of the bottom of the stage
     public float BottomBoundary = 0;
+    // Bombs available
+    int BombsLeft = 0;
+    public int MaxBombs = 3;
+    public HUD hud;
 
     // Is the player being pushed by a block
     bool IsBeingPushed = false;
@@ -17,11 +22,22 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        rigidbody2D.position = SpawnPoint;
+        transform.position = SpawnPoint;
+        BombsLeft = MaxBombs;
+
+        if (hud != null)
+        {
+            hud.UpdateBombs(BombsLeft, MaxBombs);
+        }
     }
 
     void Update()
     {
+        if (Input.GetButtonDown("Bomb"))
+        {
+            UseBomb();
+        }
+
         // Prevent player leaving stage area
         if (!AllowedThroughBoundary)
         {
@@ -57,6 +73,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "DeathBoundary")
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void OnCollisionStay2D(Collision2D other)
     {
         if (other.gameObject.tag == "Block")
@@ -89,6 +113,16 @@ public class PlayerController : MonoBehaviour
             {
                 return true;
             }
+        }
+    }
+
+    void UseBomb()
+    {
+        BombsLeft--;
+
+        if (hud != null)
+        {
+            hud.UpdateBombs(BombsLeft, MaxBombs);
         }
     }
 }

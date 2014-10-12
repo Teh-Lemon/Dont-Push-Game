@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour
 {
+    #region Variables
     // Block prefab to spawn
     public GameObject blockPrefab;
     // Time before the blocks spawn at the start of each game
@@ -17,12 +18,17 @@ public class BlockController : MonoBehaviour
     public float MinBlockScale;
     public float MaxBlockScale;
     // Percentage range of speed
-    public float SpeedRange;
+    public float BlockSpeedRange;
+    // Number of blocks to spawn at once
+    public int BlocksPerWave;
+    #endregion
 
     // Game Controller reference
     GameController gameC;
     // Available block images
     Sprite[] blockSprites;
+    // Used for cycling through the block images
+    int blocksSpawned;
 
 
     void Awake()
@@ -44,13 +50,18 @@ public class BlockController : MonoBehaviour
             Debug.Log("Cannot find 'GameController' script");
         }
 
+        Restart();
+    }
+
+    public void Restart()
+    {
         // Continually spawn blocks if game is running
-        StartCoroutine(SpawnBlockWaves());
+        StartCoroutine(SpawnWaves());
         //SpawnBlock();
     }
 
     // Continually spawn blocks while the game is PLAYING
-    IEnumerator SpawnBlockWaves()
+    IEnumerator SpawnWaves()
     {
         // Wait a bit before starting the game
         yield return new WaitForSeconds(SpawnStartDelay);
@@ -58,8 +69,10 @@ public class BlockController : MonoBehaviour
         // Spawn blocks when the game is playing
         while (gameC.CurrentState == GameStates.States.PLAYING)
         {
-            SpawnBlock();
-            SpawnBlock();
+            for (int i = 0; i < BlocksPerWave; i++)
+            {
+                SpawnBlock();
+            }
 
             // Wait between each block spawn
             yield return new WaitForSeconds(SpawnInterval);
@@ -77,13 +90,26 @@ public class BlockController : MonoBehaviour
         GameObject newBlock = Instantiate(blockPrefab, spawnPoint, Quaternion.identity) as GameObject;
 
         // Set a random image (ignore last image which is used for the bomb)
-        int imageID = Random.Range(0, blockSprites.Length - 2);
+        //int imageID = Random.Range(0, blockSprites.Length - 2);
+        int imageID = blocksSpawned % (blockSprites.Length - 2);
         newBlock.GetComponent<Block>().SetImage(blockSprites[imageID]);
 
         // Randomize scale of block
         newBlock.GetComponent<Block>().RandomizeScale(MinBlockScale, MaxBlockScale);
 
         // Randomize block speed
-        newBlock.GetComponent<Block>().RandomizeSpeed(SpeedRange);
+        newBlock.GetComponent<Block>().RandomizeSpeed(BlockSpeedRange);
+
+        blocksSpawned++;
+    }
+
+    // Remove all the active blocks from the game
+    public void RemoveAllBlocks()
+    {
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            Destroy(blocks[i]);
+        }
     }
 }
