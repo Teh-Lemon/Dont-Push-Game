@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Block : MonoBehaviour
 {
-    public float Speed = 5f;
+    public float Speed;
+    public int PointsValue;
 
     // Update is called once per frame
     void Update()

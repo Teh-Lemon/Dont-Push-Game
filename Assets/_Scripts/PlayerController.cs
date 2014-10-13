@@ -5,25 +5,39 @@ public class PlayerController : MonoBehaviour
 {
     // Movement speed
     public float Speed = 300f;
+
     // Spawn point on game start
     public Vector2 SpawnPoint = new Vector2(0, -2);
     // Y of the bottom of the stage
     public float BottomBoundary = 0;
+    // The y position of the player in the previous frame
+    float previousTransformY = 0;
+
     // Bombs available
     int BombsLeft = 0;
+    // Number of bombs player is allowed to have at once
     public int MaxBombs = 3;
+    // How long the bomb lasts in seconds
+    public float BombLength = 0;
+    bool isUsingBomb = false;
+    // Used to update score counter after each frame
+    public int scoreToAdd = 0;
+    // Enabled when using bombs
+    public SpriteRenderer Eyebrows;
+
+    // HUD
     public HUD hud;
 
     // Is the player being pushed by a block
     bool IsBeingPushed = false;
-    // The y position of the player in the previous frame
-    float previousTransformY = 0;
-
-    // Use this for initialization
+    
+        // Use this for initialization
     void Start()
     {
         transform.position = SpawnPoint;
         BombsLeft = MaxBombs;
+        isUsingBomb = false;
+        Eyebrows.enabled = false;
 
         if (hud != null)
         {
@@ -35,7 +49,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Bomb"))
         {
-            UseBomb();
+            StartCoroutine(UseBomb());
         }
 
         // Prevent player leaving stage area
@@ -49,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Grab controller input
+        // Grab input
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
@@ -85,7 +99,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.tag == "Block")
         {
-            IsBeingPushed = true;
+            if (isUsingBomb)
+            {
+                EatBlock(other.gameObject);
+            }
+            else
+            {
+                IsBeingPushed = true;
+            }
         }
     }
     void OnCollisionExit2D(Collision2D other)
@@ -116,13 +137,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void UseBomb()
+    IEnumerator UseBomb()
     {
-        BombsLeft--;
-
-        if (hud != null)
+        // Only if the player has a bomb to use
+        if (BombsLeft > 0)
         {
-            hud.UpdateBombs(BombsLeft, MaxBombs);
+            BombsLeft--;
+
+            // Update bomb counter
+            if (hud != null)
+            {
+                hud.UpdateBombs(BombsLeft, MaxBombs);
+            }
+
+            IsBeingPushed = false;
+            Eyebrows.enabled = true;
+
+            isUsingBomb = true;
+            Debug.Log("BOMB ON");
+
+            yield return new WaitForSeconds(BombLength);
+
+            isUsingBomb = false;
+            Eyebrows.enabled = false;
+            Debug.Log("BOMB OFF");
         }
+    }
+
+    // Remove block and award points
+    void EatBlock(GameObject block)
+    {
+        Destroy(block);
+        scoreToAdd += block.GetComponent<Block>().PointsValue;
+        audio.PlayOneShot(audio.clip);
     }
 }

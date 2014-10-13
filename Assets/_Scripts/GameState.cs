@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public static class GameStates 
+public static class GameStates
 {
     // Game states
     public enum States

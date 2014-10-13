@@ -9,7 +9,8 @@ public class HUD : MonoBehaviour
     public string ScoreGUIText;
     public string StartGUIText;
     public string RestartGUIText;
-    public GameObject[] Bombs = new GameObject[3];
+    public SpriteRenderer[] Bombs = new SpriteRenderer[3];
+    
 
     // Update the score GUI element
     public void UpdateScore(int newScore)
@@ -26,11 +27,11 @@ public class HUD : MonoBehaviour
         {
             if (i < numBombs)
             {
-                Bombs[i].transform.localScale = Vector3.one;
+                Bombs[i].enabled = true;
             }
             else
             {
-                Bombs[i].transform.localScale = Vector3.zero;
+                Bombs[i].enabled = false;
             }
         }
     }

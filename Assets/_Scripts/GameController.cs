@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
 
     // Current player object
     GameObject playerInstance;
+    PlayerController playerController;
 
     // Current score
     int score;
@@ -44,6 +45,11 @@ public class GameController : MonoBehaviour
                 if (playerInstance == null)
                 {
                     GameOver();
+                }
+                else
+                {
+                    AddScore(playerController.scoreToAdd);
+                    playerController.scoreToAdd = 0;
                 }
                 break;
 
@@ -75,9 +81,10 @@ public class GameController : MonoBehaviour
     {
         CurrentState = GameStates.States.PLAYING;
         playerInstance = Instantiate(PlayerPrefab, Vector2.zero, Quaternion.identity) as GameObject;
-        StartCoroutine(IncreaseScore());
+        playerController = playerInstance.GetComponent<PlayerController>();
+        StartCoroutine(BuildScore());
         blockController.Restart();
-        playerInstance.GetComponent<PlayerController>().hud = hud;
+        playerController.hud = hud;
         hud.UpdateMessages(CurrentState);
     }
 
@@ -89,15 +96,20 @@ public class GameController : MonoBehaviour
     #endregion
 
     // Regularly increase the score as the game is running
-    IEnumerator IncreaseScore()
+    IEnumerator BuildScore()
     {
         while (CurrentState == GameStates.States.PLAYING)
         {
             yield return new WaitForSeconds(ScoreIncreaseIntevalSecs);
 
-            score += ScorePerIncrease;
-
-            hud.UpdateScore(score);
+            AddScore(ScorePerIncrease);
         }
+    }
+
+    // Used to increase the score value and make sure the HUD is updated
+    public void AddScore(int addScore)
+    {
+        score += addScore;
+        hud.UpdateScore(score);
     }
 }
