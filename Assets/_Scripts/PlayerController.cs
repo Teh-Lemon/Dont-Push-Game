@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
     // Enabled when using bombs
     public SpriteRenderer Eyebrows;
 
-    // HUD
-    public HUD hud;
+    // HUD reference
+    HUD hud;
 
     // Is the player being pushed by a block
     bool IsBeingPushed = false;
@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Use bomb when space is hit
         if (Input.GetButtonDown("Bomb"))
         {
             StartCoroutine(UseBomb());
@@ -87,6 +88,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Detect when player drops off the stage and game over
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "DeathBoundary")
@@ -95,6 +97,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Detect when blocks are pushing the player off the stage
+    // Eat blocks during bomb use
     void OnCollisionStay2D(Collision2D other)
     {
         if (other.gameObject.tag == "Block")
@@ -140,7 +144,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator UseBomb()
     {
         // Only if the player has a bomb to use
-        if (BombsLeft > 0)
+        if (BombsLeft > 0 && !isUsingBomb)
         {
             BombsLeft--;
 
@@ -170,5 +174,10 @@ public class PlayerController : MonoBehaviour
         Destroy(block);
         scoreToAdd += block.GetComponent<Block>().PointsValue;
         audio.PlayOneShot(audio.clip);
+    }
+
+    public void SetHUD(HUD newHud)
+    {
+        hud = newHud;
     }
 }

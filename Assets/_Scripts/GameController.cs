@@ -5,17 +5,20 @@ public class GameController : MonoBehaviour
 {
     #region Variables
     public GameStates.States CurrentState = GameStates.States.MENU;
+
+    // Time between each score increase
+    public float ScoreIncreaseIntevalSecs;
+    // How much score is awarded per increase
+    public int ScorePerIncrease;
+
     // Player object to spawn
     public GameObject PlayerPrefab;
-    // Score
-    public float ScoreIncreaseIntevalSecs;
-    public int ScorePerIncrease;
     public BlockController blockController;
     public HUD hud;
+	public AudioSource MenuConfirmSound;
     #endregion
 
     // Current player object
-    GameObject playerInstance;
     PlayerController playerController;
 
     // Current score
@@ -34,6 +37,7 @@ public class GameController : MonoBehaviour
         switch (CurrentState)
         {
             case GameStates.States.MENU:
+                // Wait for the player to press the button before starting game
                 if (Input.GetButtonDown("Bomb"))
                 {
                     StartGame();
@@ -42,12 +46,13 @@ public class GameController : MonoBehaviour
 
             case GameStates.States.PLAYING:
                 // When the player dies, game over
-                if (playerInstance == null)
+                if (playerController == null)
                 {
                     GameOver();
                 }
                 else
                 {
+                    // Add the score from eating blocks
                     AddScore(playerController.scoreToAdd);
                     playerController.scoreToAdd = 0;
                 }
@@ -66,32 +71,46 @@ public class GameController : MonoBehaviour
         }
     }
 
+    // Execute when changing game states
     #region States
     void MainMenu()
     {
+        // Update state
         CurrentState = GameStates.States.MENU;
+        // Reset the score from the previous play session
         score = 0;
+        // Remove blocks from previous play sessions 
         blockController.RemoveAllBlocks();
+        // Show the start up message
         hud.UpdateMessages(CurrentState);
-
-        //StartGame();
     }
 
     void StartGame()
     {
+        // Update state
         CurrentState = GameStates.States.PLAYING;
-        playerInstance = Instantiate(PlayerPrefab, Vector2.zero, Quaternion.identity) as GameObject;
+        // Spawn the player
+        GameObject playerInstance = Instantiate(PlayerPrefab, Vector2.one, Quaternion.identity) as GameObject;
         playerController = playerInstance.GetComponent<PlayerController>();
+        playerController.SetHUD(hud);
+        // Start counting the score
         StartCoroutine(BuildScore());
+        // Reset the wave spawner timer
         blockController.Restart();
-        playerController.hud = hud;
+        // Remove the start message
         hud.UpdateMessages(CurrentState);
+        // Play ok sound effect
+        MenuConfirmSound.Play();
     }
 
     void GameOver()
     {
+        // Update state
         CurrentState = GameStates.States.GAME_OVER;
+        // Show the game over and restart message
         hud.UpdateMessages(CurrentState);
+        // Play dying sound
+		audio.Play();
     }
     #endregion
 
