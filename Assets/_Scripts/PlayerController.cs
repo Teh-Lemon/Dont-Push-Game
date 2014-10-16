@@ -95,6 +95,10 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else if (other.tag == "BombPickUp")
+        {
+            PickUpBomb(other.gameObject);
+        }
     }
 
     // Detect when blocks are pushing the player off the stage
@@ -158,13 +162,13 @@ public class PlayerController : MonoBehaviour
             Eyebrows.enabled = true;
 
             isUsingBomb = true;
-            Debug.Log("BOMB ON");
+            //Debug.Log("BOMB ON");
 
             yield return new WaitForSeconds(BombLength);
 
             isUsingBomb = false;
             Eyebrows.enabled = false;
-            Debug.Log("BOMB OFF");
+            //Debug.Log("BOMB OFF");
         }
     }
 
@@ -179,5 +183,27 @@ public class PlayerController : MonoBehaviour
     public void SetHUD(HUD newHud)
     {
         hud = newHud;
+    }
+
+    // Pick up a bomb power up from the stage
+    void PickUpBomb(GameObject bomb)
+    {
+        // Remove bomb power up from stage
+        Destroy(bomb);
+
+        // If the player has room to carry the bomb
+        if (BombsLeft < MaxBombs)
+        {
+            // Add bomb to inventory
+            BombsLeft++;
+
+            // Update bomb counter
+            if (hud != null)
+            {
+                hud.UpdateBombs(BombsLeft, MaxBombs);
+            }
+        }
+
+        Debug.Log(BombsLeft);
     }
 }
