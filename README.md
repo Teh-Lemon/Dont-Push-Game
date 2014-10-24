@@ -1,14 +1,14 @@
 Dont-Push-Game
 ==============
 
--2D Game made with Unity 4.5.
+2D Game made with Unity 4.5.
 
--Don't let the junk food push you to the bottom!
--Eat apples to gain temporary invulnerability.
--How long can you last?
+- Don't let the junk food push you to the bottom!
+- Eat apples to gain temporary invulnerability.
+- How long can you last?
 
 Download is in _Builds/DontPushGame.zip. 
--Extract and open the html file in your browser to play. Requires the Unity Web Player plugin to be installed.
+- Extract and open the html file in your browser to play. Requires the Unity Web Player plugin to be installed.
 
 WASD or Arrow Keys to move. Space to eat apples.
 
