@@ -9,5 +9,6 @@ Dont-Push-Game
 - WASD or Arrow Keys to move. Space to eat apples.
  
 ---
-- A game concept I came up with when I was younger and was mechanically simple enough to implement while I was learning how to use Unity.
-- It's not particularly challenging but I wanted to move onto other projects after I had gotten a hang of the editor.
+A game concept I came up with when I was younger and was mechanically simple enough to implement while I was learning how to use Unity.
+
+It's not particularly challenging but I wanted to move onto other projects after I had gotten a hang of the editor.
