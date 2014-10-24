@@ -6,7 +6,6 @@ Dont-Push-Game
 - Don't let the junk food push you to the bottom!
 - Eat apples to gain temporary invulnerability.
 - How long can you last?
-
 - WASD or Arrow Keys to move. Space to eat apples.
  
 ---
