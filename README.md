@@ -7,10 +7,11 @@ Dont-Push-Game
 - Eat apples to gain temporary invulnerability.
 - How long can you last?
 
-Download is in _Builds/DontPushGame.zip. 
-- Extract and open the html file in your browser to play. Requires the Unity Web Player plugin to be installed.
+-Download is in _Builds/DontPushGame.zip. 
+-- Extract and open the html file in your browser to play. Requires the Unity Web Player plugin to be installed.
+- Or play online here: https://db.tt/rmo3PCsp
 
-WASD or Arrow Keys to move. Space to eat apples.
+- WASD or Arrow Keys to move. Space to eat apples.
 
-A game concept I came up with when I was younger and was mechanically simple enough to implement while I was learning how to use Unity.
-It's not particularly challenging but I wanted to move onto other projects after I had gotten a hang of the editor.
+- A game concept I came up with when I was younger and was mechanically simple enough to implement while I was learning how to use Unity.
+- It's not particularly challenging but I wanted to move onto other projects after I had gotten a hang of the editor.
