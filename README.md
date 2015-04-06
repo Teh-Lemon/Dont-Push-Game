@@ -1,7 +1,7 @@
 Dont-Push-Game
 ==============
 
-2D Game made with Unity 4.5. Play online here: https://db.tt/rmo3PCsp
+2D Game made with Unity 4.5 in C#. Play online here: https://db.tt/rmo3PCsp
 
 - Don't let the junk food push you to the bottom!
 - Eat apples to gain temporary invulnerability.
